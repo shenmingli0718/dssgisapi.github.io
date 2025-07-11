@@ -35,8 +35,8 @@ const UPLOAD_DIR = path.resolve(__dirname, 'static', 'uploads');
 const MAX_FOLDER_SIZE_MB = 400; // 設置資料夾容量上限 (以MB計算)
 
 // 定義 CSV 文件路徑
-// const CSV_FILE = 'newtpe_tourist_att.csv';
-const CSV_FILE = path.join(__dirname, 'static', 'newtpe_tourist_att.csv');
+// const CSV_FILE = 'Scenic_Spot_C_f.csv';
+const CSV_FILE = path.join(__dirname, 'static', 'Scenic_Spot_C_f.csv');
 // 英文欄位名稱與中文對應表
 const fieldMapping = {
   Name: '景點名稱',            //1
@@ -46,8 +46,16 @@ const fieldMapping = {
   Tel: '景點服務電話',    //5
   Add: '景點地址',      //6
   Zipcode: '郵遞區號',  //7
-  Travellinginfo: '交通資訊描述',     //8
+  Region: '景點所屬行政區域',  //8
+  Town:'景點所屬行政區域之鄉鎮市區', //9
+  Travellinginfo: '交通資訊描述',     //10
   Opentime: '開放時間',     //9
+  Picture1: '景點圖片網址1',      //10
+  Picdescribe1: '景點圖片說明1',      //10
+  Picture2: '景點圖片網址2',      //10
+  Picdescribe2: '景點圖片說明2',      //10
+  Picture3: '景點圖片網址3',      //10
+  Picdescribe3: '景點圖片說明3',      //10
   Map: '景點地圖介紹網址',      //10
   Gov: '景點管理權責單位代碼',    //11
   Px: '景點X座標',      //12
@@ -115,8 +123,8 @@ app.get('/get_tourist_data', (req, res) => {
           res.json(records);  // ✅ Return structured JSON
       })
       .on('error', (error) => {
-          console.error("新北觀光旅遊檔讀檔錯誤:", error);
-          res.status(500).json({ error: '新北觀光旅遊檔讀檔錯誤' });
+          console.error("國內觀光旅遊檔讀檔錯誤:", error);
+          res.status(500).json({ error: '國內觀光旅遊檔讀檔錯誤' });
       });
 });
 
