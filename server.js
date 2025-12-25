@@ -1,4 +1,5 @@
 const cors = require('cors');  // 引入 cors 套件
+require('dotenv').config();  // 這行一定要在最上面
 const express = require('express');
 const dotenv = require('dotenv'); 
 //const cors = require('cors');  // 引入 cors 套件
@@ -36,44 +37,52 @@ const MAX_FOLDER_SIZE_MB = 400; // 設置資料夾容量上限 (以MB計算)
 
 // 定義 CSV 文件路徑
 // const CSV_FILE = 'Scenic_Spot_C_f.csv';
-const CSV_FILE = path.join(__dirname, 'static', 'Scenic_Spot_C_f.csv');
+const CSV_FILE = path.join(__dirname, 'static', 'Scenic_Spot_C_f_filled1拷貝2_至3814.csv');
 // 英文欄位名稱與中文對應表
+// Id: 景點(或景區)編號  //1
 const fieldMapping = {
-  Name: '景點名稱',            //1
-  Zone: '景點所屬景區編號',     //2
-  Toldescribe: '景點特色文字詳述',  //3
-  Description: '景點特色文字簡述',  //4
-  Tel: '景點服務電話',    //5
-  Add: '景點地址',      //6
-  Zipcode: '郵遞區號',  //7
-  Region: '景點所屬行政區域',  //8
-  Town:'景點所屬行政區域之鄉鎮市區', //9
-  Travellinginfo: '交通資訊描述',     //10
-  Opentime: '開放時間',     //9
-  Picture1: '景點圖片網址1',      //10
-  Picdescribe1: '景點圖片說明1',      //10
-  Picture2: '景點圖片網址2',      //10
-  Picdescribe2: '景點圖片說明2',      //10
-  Picture3: '景點圖片網址3',      //10
-  Picdescribe3: '景點圖片說明3',      //10
-  Map: '景點地圖介紹網址',      //10
-  Gov: '景點管理權責單位代碼',    //11
-  Px: '景點X座標',      //12
-  Py: '景點Y座標',      //13
-  Orgclass: '景點分類說明',       //14
-  Class1: '景點分類代碼1',        //15
-  Class2: '景點分類代碼2',        //16
-  Class3: '景點分類代碼3',        //17
-  Level: '古蹟分級',        //18
-  Website: '景點網址',      //19
-  Parkinginfo: '停車資訊',      //20
-  Parkinginfo_px: '主要停車場X座標',   //21
-  Parkinginfo_py: '主要停車場Y座標',   //22
-  Ticketinfo: '景點票價資訊',     //23
-  Remarks: '警告及注意事項',      //24
-  Keyword: '搜尋關鍵字',     //25
-  Changetime: '資料異動時間',     //26
+  Name: '景點名稱',            //2
+  Zone: '景點所屬景區編號',     //3
+  Toldescribe: '景點特色文字詳述',  //4
+  Description: '景點特色文字簡述',  //5
+  Tel: '景點服務電話',    //6
+  Add: '景點地址',      //7
+  Zipcode: '郵遞區號',  //8
+  Region: '景點所屬行政區域',  //9
+  Town:'景點所屬行政區域之鄉鎮市區', //10
+  Travellinginfo: '交通資訊描述',     //11
+  Opentime: '開放時間',     //12
+  Picture1: '景點圖片網址1',      //13
+  Picdescribe1: '景點圖片說明1',      //14
+  Picture2: '景點圖片網址2',      //15
+  Picdescribe2: '景點圖片說明2',      //16
+  Picture3: '景點圖片網址3',      //17
+  Picdescribe3: '景點圖片說明3',      //18
+  Map: '景點地圖介紹網址',      //19
+  Gov: '景點管理權責單位代碼',    //20
+  Px: '景點X座標',      //21
+  Gov: '景點管理權責單位代碼',    //22
+  Px: '景點X座標',      //23
+  Py: '景點Y座標',      //24
+  Orgclass: '景點分類說明',       //25
+  Class1: '景點分類代碼1',        //26
+  Class2: '景點分類代碼2',        //27
+  Class3: '景點分類代碼3',        //28
+  Mapinfo: '景點地圖X座標',      //29
+  Mapinfo: '景點地圖Y座標',      //30
+  Level: '古蹟分級',        //31
+  Website: '景點網址',      //32
+  Parkinginfo: '停車資訊',      //33
+  Website: '景點網址',      //34
+  Parkinginfo: '停車資訊',      //35
+  Parkinginfo_px: '主要停車場X座標',   //36
+  Parkinginfo_py: '主要停車場Y座標',   //37
+  Ticketinfo: '景點票價資訊',     //38
+  Remarks: '警告及注意事項',      //39
+  Keyword: '搜尋關鍵字',     //40
+  Changetime: '資料異動時間',     //41
 };
+  
 
 // 讀取 CSV 文件的函數
 const readCSV = async () => {
@@ -90,7 +99,7 @@ const readCSV = async () => {
 // 格式化當前時間
 const getCurrentTimestamp = () => {
   const now = new Date();
-  now.setHours(now.getHours() + 8); // 原慢8小時，轉換為台灣時間
+  // now.setHours(now.getHours() + 8); // 伺服器若於美國其時間慢8小時，須加8時轉換為台灣時間,惟localhos伺服器時此列需註解
   const yyyy = now.getFullYear();
   const mm = String(now.getMonth() + 1).padStart(2, '0');
   const dd = String(now.getDate()).padStart(2, '0');
@@ -102,12 +111,13 @@ const getCurrentTimestamp = () => {
 
 // 簡單的 GET 路由
 app.get('/', (req, res) => {
-    res.send('(互動式GIS) Hello, World! 114/02/08');
+    res.send('(互動式GIS) Hello, World! 114/09/20');
 });
 
 // 獲取環境變數domain
 app.get("/env", (req, res) => {
-  res.json({ domain: process.env.DOMAIN });
+  res.json({ domain: process.env.DOMAIN, port: process.env.PORT });
+  
 });
 
 // 傳遞 newtpe_tourist_att.csv
@@ -181,7 +191,7 @@ app.post('/check_capacity_limit', express.urlencoded({ extended: true }), (req, 
     res.json({ message: '空間充足，可以上傳。' });
 });                 
 //
-app.post('/2024_aut_Python_proj', upload.single('fileChunk'), async (req, res) => {
+app.post('/2025_aut_Python_proj', upload.single('fileChunk'), async (req, res) => {
     const { chunkIndex, fileName, totalChunks, subid } = req.body;
     const chunk = req.file;
 
@@ -328,6 +338,7 @@ app.get('/api/get-fields', async (req, res) => {
     const records = await readCSV();
     // const record = records.find((r) => r['PlaceID'] === PlaceID);
     const record = records.find((r) => r['Id'] === PlaceID);
+    // find 只會回傳第一筆符合條件的資料
 
     if (!record) {
       return res.status(404).json({ message: '未找到相關記錄' });
@@ -335,7 +346,7 @@ app.get('/api/get-fields', async (req, res) => {
 
     // 過濾掉 Id 欄位
     const fields = Object.keys(record)
-      .filter((key) => key !== 'Id') // 排除 'Id'
+      .filter((key) => key !== 'Id') // 排除 'Id', filter 回傳所有符合條件的資料的陣列
       .map((key) => ({
         key,
         label: fieldMapping[key] || key,  // 映射到中文名稱
@@ -364,6 +375,7 @@ app.post('/api/update-csv', async (req, res) => {
       const { field, content, PlaceID } = update;
       // const record = records.find((r) => r['PlaceID'] === PlaceID);
       const record = records.find((r) => r['Id'] === PlaceID);
+      // find 只會回傳第一筆符合條件的資料
 
       if (record) {
         record[field] = content;
